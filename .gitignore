@@ -1,3 +1,13 @@
+# https://github.com/atc0005/list-emails
+
+# Local content that may be present alongside the script,
+# but should NOT be included in the repo
+accounts.ini
+log
+output
+scratch
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

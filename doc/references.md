@@ -2,6 +2,8 @@
 
 - Python 3 Pocket Primer, page 184
 
+- <http://jeromebelleman.gitlab.io/posts/productivity/mailcli/>
+
 - <https://docs.python.org/3/library/imaplib.html>
 - <https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior>
 - <https://docs.python.org/3/library/datetime.html#datetime.time>

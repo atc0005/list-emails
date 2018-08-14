@@ -279,6 +279,12 @@ def get_email_subject_lines(account, mailbox, folder):
     log.info("Searching %s for %s messages", folder,
         account.settings['search_criteria'])
     log.debug("Before search()")
+
+    # Each command returns a tuple: (type, [data, ...]) where type is usually
+    # 'OK' or 'NO', and data is either the text from the command response, or
+    # mandated results from the command. Each data is either a string, or a
+    # tuple. If a tuple, then the first part is the header of the response, and
+    # the second part contains the data (ie: ‘literal’ value).
     result, data = mailbox.search(None, account.settings['search_criteria'])
     log.debug("After search()")
 
@@ -289,8 +295,10 @@ def get_email_subject_lines(account, mailbox, folder):
 
     log.debug("Before looping over data[0]")
 
-    #pprint.pprint(data[0])
-
+    # search() function returns a tuple made of:
+    #
+    # The search success status. A list made of a single, potentially very long
+    # string of space-separated message numbers.
     for num in data[0].split():
 
         log.debug("Before fetch()")
@@ -302,20 +310,35 @@ def get_email_subject_lines(account, mailbox, folder):
         if result != 'OK':
             print("ERROR getting message", num, ", ", result)
             break
-        s = str(data[0][1])
 
-        log.debug("Before find()")
+        # Each command returns a tuple: (type, [data, ...]) where type is
+        # usually 'OK' or 'NO', and data is either the text from the command
+        # response, or mandated results from the command. Each data is either a
+        # string, or a tuple. If a tuple, then the first part is the header of
+        # the response, and the second part contains the data (ie: ‘literal’
+        # value).
+        headers = str(data[0][1])
+
         # Look for the string "Subject" in the header
-        k = s.find("Subject: ")
+        log.debug("Before find()")
+        index_start = headers.find("Subject: ")
         log.debug("After find()")
 
-        # Found it?
-        if (k >= 0):
-            s = s[k:]
-            k = s.find('\\r\\n')
-            s = s[:k]
+        # Confirm match, collect substring for further processing
+        if (index_start >= 0):
+            index_start_to_end = headers[index_start:]
 
-            decode_results = decode_header(s)
+            # Look for Windows EOL to indicate the end of Subject line
+            #
+            # TODO: Further testing needs to be done to confirm whether the
+            # behavior varies based on client OS or server-side IMAP server
+            # implementation/native OS EOL.
+            index_end = index_start_to_end.find('\\r\\n')
+
+            # This should grab just the substring we're after
+            subject_header = index_start_to_end[:index_end]
+
+            decode_results = decode_header(subject_header)
             log.debug("Type of %r is %s",
                 decode_results, type(decode_results))
 

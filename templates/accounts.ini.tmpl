@@ -1,24 +1,75 @@
-# https://github.com/atc0005/list-emails
-
-# Purpose:
+# PURPOSE:
 #
 #   Account credentials and server settings for various email accounts
-#    that we monitor
+#   that we monitor. This file is in INI format. See reference links
+#   for additional information.
+
+# REFERENCES:
+#
+# https://github.com/atc0005/list-emails
+# https://en.wikipedia.org/wiki/INI_file
+# https://docs.python.org/3/library/configparser.html
+# https://docs.python.org/3/library/configparser.html#supported-ini-file-structure
+
+
+
+
+###################################################################
+# GLOBAL SETTINGS
+###################################################################
+
+[DEFAULT]
+
+# Change this to whatever your primary email server is named
+server_name = imap.example.com
+
+# This shouldn't need to be changed as most IMAP servers listen on this port
+server_port = 993
+
+# This option specifies that ALL emails should be reported, not just ones
+# with specific flags/attributes (e.g., "only show me unread mail")
+search_criteria = ALL
+
+
+
+
+
+###################################################################
+# ACCOUNTS
+###################################################################
+
+# Each email account that you wish to monitor requiers a separate section
+# that beings with a section header of [ACCOUNT_NAME]. For each account you
+# may specify multiple folders to check. Each folder name should be
+# double-quoted and comma separated. See the sample entries below for an
+# example. At some point a future version of this script may remove the
+# requirement that each folder be double-quoted, but for now this is necessary
+# in order to meet the requirements of the imaplib module that this script
+# relies on.
 
 [account1]
 
 username =
 password =
-folders = Inbox, Junk E-Mail
+
+# Here is an example of three folders that need to be checked. The last folder
+# is found beneath the Inbox folder on the account. That hierarchy is
+# denoted here by naming the Inbox folder followed by a slash and then the
+# subfolder name.
+folders = "Inbox", "Junk E-Mail", "Inbox/Current Reporting"
+
+
 
 [account2]
 
 username =
 password =
-folders = Inbox, Junk E-Mail
+folders = "Inbox", "Junk E-Mail"
+
+
 
 [account3]
 
 username =
 password =
-folders = Inbox, Junk E-Mail
+folders = "Inbox", "Junk E-Mail"

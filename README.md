@@ -39,7 +39,11 @@ File/Path | Purpose | Notes
 1. Copy `templates/accounts.ini.tmpl` to the same folder that the script
    resides in. Rename the file `accounts.ini`.
 1. Fill in the configuration file using username/password info for each
-   account that you wish to retrieve Subject lines for.
+   account that you wish to retrieve Subject lines for. Update any placeholder
+   values with real production values that match your environment.
+1. Make sure to review the configuration file and add double-quotes around
+   each folder name if they are not already there. The latest version of the
+   template file *should* illustrate the required syntax.
 1. Open a command prompt.
 1. Change to the directory where the script is located.
 1. Type `ls-emails.py`.

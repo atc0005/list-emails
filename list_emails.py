@@ -48,7 +48,7 @@ app_name = 'ls-emails'
 config_file = os.path.join(script_path, 'accounts.ini')
 
 output_file_header_template = os.path.join(
-    script_path, 'templates', 'email_list_header.tmpl')
+    script_path, 'templates', 'email_redmine_post.tmpl')
 
 # Location where this script will write lists of emails
 output_dir = os.path.join(script_path, 'output')

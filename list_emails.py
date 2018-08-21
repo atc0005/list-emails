@@ -333,11 +333,11 @@ def get_email_subject_lines(account, mailbox, folder):
     return email_subject_lines
 
 
-def record_emails(output_file, items, header_template_file, account, folder, timestamp):
+def record_emails(output_file, items, template_file, account, folder, timestamp):
     """Record emails found in specified folder"""
 
     try:
-        header_fh = open(header_template_file, "r")
+        template_fh = open(template_file, "r")
     except IOError as error:
         log.exception("Failed to open %s: %s", output_file, error)
 
@@ -347,23 +347,19 @@ def record_emails(output_file, items, header_template_file, account, folder, tim
     except Exception as error:
         log.exception("Failed to open %s: %s", output_file, error)
 
-    header_template = header_fh.read()
-    header = header_template.format(
+    items.sort()
+    for line in items:
+        log.debug("Processing: %r of type %s", line, type(line))
+
+    output_template = template_fh.read()
+    formatted_output = output_template.format(
         account=account.name,
         folder=folder,
-        timestamp=timestamp
+        timestamp=timestamp,
+        list_of_emails="\n*".join(items)
     )
 
-    # Write out contents of header template as first entry in new file
-    output_fh.write(header + '\n')
-
-    items.sort()
-
-    # Explicitly add trailing newline since we don't add them in other
-    # functions or our templates.
-    for line in items:
-        log.debug("Writing: %r of type %s", line, type(line))
-        output_fh.write(line + '\n')
+    output_fh.write(formatted_output)
     output_fh.write('\n')
     output_fh.close()
 
@@ -394,7 +390,7 @@ for email_account in config.sections():
     #sys.exit()
 
     list_of_emails_file = os.path.join(
-        script_path, 'output', 'emails_for_{}-{}.txt'.format(account.name, TIMESTAMP))
+        script_path, 'output', 'emails_for_{}.txt'.format(TIMESTAMP))
 
     log.info("Checking folders for %s", account.name)
 

@@ -46,7 +46,7 @@ File/Path | Purpose | Notes
    template file *should* illustrate the required syntax.
 1. Open a command prompt.
 1. Change to the directory where the script is located.
-1. Type `ls-emails.py`.
+1. Type `list_emails.py`.
 1. Press the Enter key.
 1. Review the files within the `output` directory.
 
@@ -54,8 +54,10 @@ File/Path | Purpose | Notes
 
 1. If the results are inconclusive or odd behavior is encountered, review
    the log files within the `log` directory.
-1. If the problem is still not clear, sanitize the contents of the log file
-   and then open a new issue with as clear an error report as you can provide.
+1. If the problem is still not clear:
+    1. sanitize the contents of the log file
+    1. open a new issue with as clear an error report as you can provide
+    1. attach the sanitized log file
 
 ## References
 

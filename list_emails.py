@@ -284,7 +284,7 @@ def get_email_subject_lines(account, mailbox, folder):
     # 'OK' or 'NO', and data is either the text from the command response, or
     # mandated results from the command. Each data is either a string, or a
     # tuple. If a tuple, then the first part is the header of the response, and
-    # the second part contains the data (ie: ‘literal’ value).
+    # the second part contains the data (ie: 'literal' value).
     result, data = mailbox.search(None, account.settings['search_criteria'])
     log.debug("After search()")
 
@@ -315,7 +315,7 @@ def get_email_subject_lines(account, mailbox, folder):
         # usually 'OK' or 'NO', and data is either the text from the command
         # response, or mandated results from the command. Each data is either a
         # string, or a tuple. If a tuple, then the first part is the header of
-        # the response, and the second part contains the data (ie: ‘literal’
+        # the response, and the second part contains the data (ie: 'literal'
         # value).
         headers = str(data[0][1])
 

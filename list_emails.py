@@ -16,7 +16,8 @@
 import argparse
 import configparser
 import datetime
-from email.header import decode_header, make_header
+import email.parser
+import email.policy
 import imaplib
 import json
 import logging
@@ -68,9 +69,8 @@ stdout_handler = logging.StreamHandler(stream=sys.stdout)
 stdout_handler.setFormatter(stdout_formatter)
 stdout_handler.setLevel(logging.INFO)
 
-
-
-file_handler = logging.FileHandler(app_log_file, mode='w', delay=True)
+file_handler = logging.FileHandler(
+    app_log_file, mode='w', delay=True, encoding='utf-8')
 file_handler.setFormatter(file_formatter)
 file_handler.setLevel(logging.DEBUG)
 
@@ -287,6 +287,7 @@ def get_email_subject_lines(account, mailbox, folder):
     # the second part contains the data (ie: 'literal' value).
     result, data = mailbox.search(None, account.settings['search_criteria'])
     log.debug("After search()")
+    log.debug("object as provided by repr(): %s", repr(data))
 
     # Select the messages wanted
     if result != 'OK':
@@ -311,51 +312,23 @@ def get_email_subject_lines(account, mailbox, folder):
             print("ERROR getting message", num, ", ", result)
             break
 
-        # Each command returns a tuple: (type, [data, ...]) where type is
-        # usually 'OK' or 'NO', and data is either the text from the command
-        # response, or mandated results from the command. Each data is either a
-        # string, or a tuple. If a tuple, then the first part is the header of
-        # the response, and the second part contains the data (ie: 'literal'
-        # value).
-        headers = str(data[0][1])
+        log.debug("Using Parser() to retrieve headers")
+        headers = email.parser.Parser(policy= email.policy.default).parsestr(
+            data[0][1].decode("utf-8", "ignore"), headersonly=True)
 
-        # Look for the string "Subject" in the header
-        log.debug("Before find()")
-        index_start = headers.find("Subject: ")
-        log.debug("After find()")
+        log.debug("Attempting to retrieve headers['subject'] value")
+        subject = headers['subject']
 
-        # Confirm match, collect substring for further processing
-        if (index_start >= 0):
-            index_start_to_end = headers[index_start:]
+        log.debug("Subject string value: %s", str(subject))
+        log.debug("Subject type value: %r", type(subject))
+        log.debug("Subject object properties: %s", dir(subject))
 
-            # Look for Windows EOL to indicate the end of Subject line
-            #
-            # TODO: Further testing needs to be done to confirm whether the
-            # behavior varies based on client OS or server-side IMAP server
-            # implementation/native OS EOL.
-            index_end = index_start_to_end.find('\\r\\n')
+        # Remove 'Subject: ' from subject line and stray whitespace if present
+        subject = subject.replace('Subject:', '').strip()
 
-            # This should grab just the substring we're after
-            subject_header = index_start_to_end[:index_end]
+        email_subject_lines.append(subject)
 
-            decode_results = decode_header(subject_header)
-            log.debug("Type of %r is %s",
-                decode_results, type(decode_results))
-
-            # If the list is greater than 1 tuple
-            if len(decode_results) > 1:
-                (bytes, encoding) = (decode_results[1])
-                subject = bytes.decode(encoding)
-            else:
-                subject = decode_results[0][0]
-
-            log.debug("Type of %r after decoding passes: %s",
-                subject, type(subject))
-
-            # Remove 'Subject: ' from subject line if still present
-            subject = subject.replace('Subject:', '').strip()
-
-            email_subject_lines.append(subject)
+    log.info("Finished searching %s for messages", folder)
 
     return email_subject_lines
 
@@ -370,7 +343,7 @@ def record_emails(output_file, items, header_template_file, account, folder, tim
 
     # Attempt to reuse existing file
     try:
-        output_fh = open(output_file, "a")
+        output_fh = open(output_file, "a", encoding='utf-8')
     except Exception as error:
         log.exception("Failed to open %s: %s", output_file, error)
 
@@ -481,7 +454,12 @@ for email_account in config.sections():
             message_count = int(message_count[0])
 
             if message_count >= 1:
+
+                log.debug("message_count >=1")
+
                 list_folder_count(account.name, mailbox, folder)
+
+                log.debug("Getting email subject lines")
 
                 emails_in_folder = get_email_subject_lines(
                     account, mailbox, folder)
@@ -511,9 +489,9 @@ for email_account in config.sections():
             log.error("%s: Unable to list messages in the %s folder: %s",
             account.name, folder, message_count)
 
+        log.info("Finished examining %s folder for messages.", folder)
 
-
-    # Close folder we were just looking at
+    # Close mailbox we were just looking at
     log.debug("Closing %s mailbox ...", account.name)
     try:
         mailbox.close()
@@ -535,3 +513,5 @@ for email_account in config.sections():
     else:
         log.debug("Successfully closed connection to %s",
             account.settings['server_name'])
+
+log.info("Finished checking specified accounts and folders")

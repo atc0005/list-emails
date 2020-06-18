@@ -1,0 +1,33 @@
+# Copyright 2020 Adam Chalkley
+#
+# https://github.com/atc0005/list-emails
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+# https://github.com/igorshubovych/markdownlint-cli#configuration
+# https://github.com/DavidAnson/markdownlint#optionsconfig
+
+# Setting the special default rule to true or false includes/excludes all
+# rules by default.
+"default": true
+
+# We know that line lengths will be long in the main README file, so don't
+# report those cases.
+"MD013": false
+
+# Don't complain if sub-heading names are duplicated since this is a common
+# practice in CHANGELOG.md (e.g., "Fixed").
+"MD024":
+  "siblings_only": true

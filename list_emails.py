@@ -19,6 +19,7 @@ import datetime
 import email.parser
 import email.policy
 import imaplib
+import io
 import json
 import logging
 import logging.handlers
@@ -26,6 +27,9 @@ import os
 import pprint
 import sys
 
+# Set encoding for stdout, stderr explicitly to UTF-8
+sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
 
 #######################################################
 # CONSTANTS - Modify INI config files instead

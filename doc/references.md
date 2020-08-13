@@ -22,3 +22,5 @@
 - <http://stackoverflow.com/questions/3845423/remove-empty-strings-from-a-list-of-strings#comment56770861_3845449>
 - <https://stackoverflow.com/questions/415511/how-to-get-the-current-time-in-python>
 - <https://stackoverflow.com/questions/7331351/python-email-header-decoding-utf-8>
+
+- <https://stackoverflow.com/questions/56995919/change-python-3-7-default-encoding-from-cp1252-to-cp65001-aka-utf-8>

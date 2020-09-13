@@ -323,10 +323,14 @@ def get_email_subject_lines(account, mailbox, folder):
         log.debug("Subject type value: %r", type(subject))
         log.debug("Subject object properties: %s", dir(subject))
 
-        # Remove 'Subject: ' from subject line and stray whitespace if present
-        subject = subject.replace('Subject:', '').strip()
-
-        email_subject_lines.append(subject)
+        # Explicitly skip processing any emails without a Subject line
+        if subject == None:
+            log.warning("Subject string value is missing, skipping further processing")
+            continue
+        else:
+            # Remove 'Subject: ' from subject line and stray whitespace if present
+            subject = subject.replace('Subject:', '').strip()
+            email_subject_lines.append(subject)
 
     log.info("Finished searching %s for messages", folder)
 

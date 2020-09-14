@@ -327,10 +327,21 @@ def get_email_subject_lines(account, mailbox, folder):
         log.debug("Subject type value: %r", type(subject))
         log.debug("Subject object properties: %s", dir(subject))
 
-        # Explicitly skip processing any emails without a Subject line
+        # Generate subject line for any emails missing one
         if subject == None:
-            log.warning("Subject string value is missing, skipping further processing")
-            continue
+            log.warning("Subject email header is missing")
+            log.info("Auto-generating subject line")
+
+            subject = "(no subject)"
+
+            if headers['from'] == None:
+                log.warning("From email header is missing")
+            else:
+                log.info("Using From email header for generation of Subject line")
+                subject += " from {}".format(headers['from'])
+
+            email_subject_lines.append(subject)
+
         else:
             # Remove 'Subject: ' from subject line and stray whitespace if present
             subject = subject.replace('Subject:', '').strip()

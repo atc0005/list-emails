@@ -17,6 +17,7 @@
 - <https://pymotw.com/3/configparser/>
 
 - <http://stackoverflow.com/questions/7314942/python-imaplib-to-get-gmail-inbox-subjects-titles-and-sender-name>
+- <https://stackoverflow.com/questions/39115141/imaplib-error-command-search-illegal-in-state-auth-only-allowed-in-states-sele>
 - <http://stackoverflow.com/questions/22392120/python-imap-mail-seach-with-minutes>
 - <http://stackoverflow.com/questions/12556649/increasing-speed-of-imap-bulk-message-deletion-in-python>
 - <http://stackoverflow.com/questions/3845423/remove-empty-strings-from-a-list-of-strings#comment56770861_3845449>

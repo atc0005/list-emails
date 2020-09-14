@@ -459,12 +459,11 @@ for email_account in config.sections():
 
         log.info("Examining %s folder for messages ...", folder)
 
-        try:
-            result, message_count = mailbox.select(mailbox=folder, readonly=True)
-        except imaplib.IMAP4.error as error:
-            log.exception("Unable to select %s to check contents (%s)",
-                folder, error)
-            sys.exit(error)
+        # NOTE: Selecting a non-existent IMAP mailbox does not raise an
+        # exception. We are instead wholly reliant on the result string to
+        # indicate success or failure.
+        log.debug("About to select mailbox %s", folder)
+        result, message_count = mailbox.select(mailbox=folder, readonly=True)
 
         # If the select method was able to list the folder ...
         if result == 'OK':
@@ -501,25 +500,29 @@ for email_account in config.sections():
             else:
                 log.info("%d messages in %s folder", message_count, folder)
 
+            # Close mailbox we were just looking at
+            log.debug("Closing %s mailbox ...", account.name)
+            try:
+                mailbox.close()
+            except imaplib.IMAP4.error as error:
+                log.exception("Unable to close mailbox for %s (%s)",
+                    account.name, error)
+                sys.exit(1)
+            else:
+                log.debug("Successfully closed %s mailbox", account.name)
 
-        # If the result code doesn't indicate success then the message count
-        # is instead an error string
+        # If the result code from attempting to select the specified mailbox
+        # doesn't indicate success, then the message count is instead an error
+        # string
         else:
             log.error("%s: Unable to list messages in the %s folder: %s",
             account.name, folder, message_count)
 
-        log.info("Finished examining %s folder for messages.", folder)
+            # Skip attempts to close mailbox since we were unable to open it,
+            # move to the next one if applicable
+            continue
 
-    # Close mailbox we were just looking at
-    log.debug("Closing %s mailbox ...", account.name)
-    try:
-        mailbox.close()
-    except imaplib.IMAP4.error as error:
-        log.exception("Unable to close mailbox for %s (%s)",
-            account.name, error)
-        sys.exit(1)
-    else:
-        log.debug("Successfully closed %s mailbox", account.name)
+        log.info("Finished examining %s folder for messages.", folder)
 
     # Close connection to server after processing specified folders
     log.debug("Closing connection to %s ...", account.settings['server_name'])
@@ -530,6 +533,7 @@ for email_account in config.sections():
             account.name, error)
         sys.exit(1)
     else:
+        log.info("%s: Successfully logged out", account.name)
         log.debug("Successfully closed connection to %s",
             account.settings['server_name'])
 

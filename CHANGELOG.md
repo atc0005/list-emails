@@ -26,6 +26,18 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.4] - 2020-09-14
+
+### Changed
+
+- Use From header to generate missing Subject line
+  - instead of skipping emails with missing Subject lines
+
+### Fixed
+
+- imaplib.IMAP4.error: command CLOSE illegal in state AUTH, only allowed in
+  states SELECTED
+
 ## [v0.1.3] - 2020-09-14
 
 ### Added
@@ -58,7 +70,8 @@ The following types of changes will be recorded in this file:
 
 Initial release; add first draft of list-emails script.
 
-[Unreleased]: https://github.com/atc0005/list-emails/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/atc0005/list-emails/compare/v0.1.4...HEAD
+[v0.1.4]: https://github.com/atc0005/list-emails/releases/tag/v0.1.4
 [v0.1.3]: https://github.com/atc0005/list-emails/releases/tag/v0.1.3
 [v0.1.2]: https://github.com/atc0005/list-emails/releases/tag/v0.1.2
 [v0.1.1]: https://github.com/atc0005/list-emails/releases/tag/v0.1.1

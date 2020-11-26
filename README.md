@@ -7,6 +7,17 @@ This script can be used to mass-list the contents of specific
 email accounts and folders as part of preparing a report regarding actions
 taken on those items.
 
+## Status
+
+**This project is retired.**
+
+The functionality provided by the `list_emails.py` script has been superseded
+by the new `list-emails` application provided by `v0.3.0` of the
+atc0005/check-mail project. See the [README for the check-mail
+project](https://github.com/atc0005/check-mail/blob/master/README.md) and/or
+the [Pull Request](https://github.com/atc0005/check-mail/pull/125) which added
+the `list-emails` application to that project.
+
 ## Requirements
 
 - Tested: Python 3.6.5
@@ -61,5 +72,6 @@ File/Path | Purpose | Notes
 
 ## References
 
+- <https://github.com/atc0005/check-mail>
 - <https://github.com/atc0005/list-emails>
 - see [doc/references.md](doc/references.md)
